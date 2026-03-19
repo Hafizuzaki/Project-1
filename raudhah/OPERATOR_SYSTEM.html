@@ -1,0 +1,162 @@
+<h1>Sistem Admin Operator - Dokumentasi</h1>
+
+<h2>Struktur Pengguna</h2>
+
+<table border="1" cellpadding="10">
+<tr>
+    <th>Role</th>
+    <th>Nama</th>
+    <th>Akses</th>
+    <th>Dashboard</th>
+</tr>
+<tr>
+    <td><strong>admin</strong></td>
+    <td>Administrator / Operator</td>
+    <td>
+        ✓ Kelola member (user)<br>
+        ✓ Verifikasi pembayaran<br>
+        ✓ Kelola data pohon binary<br>
+        ✓ Edit akun member<br>
+        ✓ Lihat laporan komisi<br>
+        ✓ Kelola paket umroh<br>
+        ✓ Proses penarikan komisi<br>
+        ✓ Akses admin panel penuh
+    </td>
+    <td>/admin/dashboard.php</td>
+</tr>
+<tr>
+    <td><strong>user</strong></td>
+    <td>Member / Jamaah</td>
+    <td>
+        ✓ Lihat dashboard pribadi<br>
+        ✓ Daftar paket umroh<br>
+        ✓ Lihat komisi referral<br>
+        ✓ Edit profil pribadi<br>
+        ✓ Lihat pohon binary<br>
+        ✓ Buat penarikan komisi
+    </td>
+    <td>/dashboard/index.php</td>
+</tr>
+</table>
+
+<h2>Login & Redirect</h2>
+
+<h3>Admin (Operator)</h3>
+<ul>
+    <li><strong>URL Login:</strong> http://localhost/raudhah/login.php</li>
+    <li><strong>Username:</strong> admin</li>
+    <li><strong>Password:</strong> Admin@1234</li>
+    <li><strong>Redirect to:</strong> /admin/dashboard.php</li>
+</ul>
+
+<h3>User (Member)</h3>
+<ul>
+    <li><strong>URL Login:</strong> http://localhost/raudhah/login.php</li>
+    <li><strong>Username:</strong> [member username]</li>
+    <li><strong>Password:</strong> [member password]</li>
+    <li><strong>Redirect to:</strong> /dashboard/index.php</li>
+</ul>
+
+<h2>Fitur Admin Operator</h2>
+
+<h3>1. Kelola Member</h3>
+<ul>
+    <li>Lihat daftar semua member</li>
+    <li>Aktifkan/nonaktifkan akun member</li>
+    <li>Edit data member (nama, email, nomor rekening)</li>
+    <li>Lihat riwayat aktivitas member</li>
+</ul>
+
+<h3>2. Verifikasi Pembayaran</h3>
+<ul>
+    <li>Lihat daftar pembayaran yang pending</li>
+    <li>Verifikasi bukti transfer</li>
+    <li>Tolak pembayaran dengan alasan</li>
+    <li>Akses laporan pembayaran</li>
+</ul>
+
+<h3>3. Kelola Pohon Binary</h3>
+<ul>
+    <li>Lihat struktur pohon member</li>
+    <li>Edit posisi member (kiri/kanan)</li>
+    <li>Edit parent/referrer member</li>
+    <li>Lihat visualisasi pohon</li>
+</ul>
+
+<h3>4. Kelola Paket Umroh</h3>
+<ul>
+    <li>Tambah paket baru</li>
+    <li>Edit paket yang ada</li>
+    <li>Hapus paket</li>
+    <li>Manage quota dan keberangkatan</li>
+</ul>
+
+<h3>5. Laporan Komisi</h3>
+<ul>
+    <li>Lihat komisi pending, approved, paid</li>
+    <li>Verifikasi komisi</li>
+    <li>Kelola penarikan komisi (withdrawal)</li>
+</ul>
+
+<h2>Database Schema</h2>
+
+<h3>users table</h3>
+<pre>
+role ENUM('admin', 'user')
+- admin = Operator yang mengelola sistem
+- user = Member/Jamaah yang terdaftar
+
+status ENUM('pending', 'active', 'suspended')
+- pending = belum verifikasi
+- active = aktif dan bisa mengakses
+- suspended = dinonaktifkan operator
+</pre>
+
+<h3>registrations table</h3>
+<pre>
+payment_status ENUM('unpaid', 'pending_verification', 'verified', 'rejected')
+- Dikelola oleh operator (admin)
+</pre>
+
+<h3>withdrawals table</h3>
+<pre>
+status ENUM('pending', 'approved', 'rejected', 'completed')
+- Operator mengelola approval dan pembayaran
+</pre>
+
+<h2>Access Control</h2>
+
+<h3>Untuk melindungi admin panel:</h3>
+<pre>
+// Hanya admin yang bisa akses
+requireAdmin(); 
+// atau 
+isAdmin(); 
+
+// Atau gunakan alias
+isOperator();
+</pre>
+
+<h2>Setup Instructions</h2>
+
+<ol>
+    <li>Akses <a href="http://localhost/raudhah/setup-operator.php">setup-operator.php</a></li>
+    <li>Script akan:
+        <ul>
+            <li>Buat database raudhah_travel</li>
+            <li>Buat semua tabel dengan struktur lengkap</li>
+            <li>Insert admin operator user</li>
+        </ul>
+    </li>
+    <li>Login dengan credentials di atas</li>
+    <li>Akses admin dashboard untuk mengelola sistem</li>
+</ol>
+
+<h2>Logout</h2>
+
+<p>Baik admin maupun user bisa logout di menu user profile mereka. Session akan dihapus dan redirect ke login page.</p>
+
+<?php
+    echo "<hr>";
+    echo "<p><a href='http://localhost/raudhah/setup-operator.php' class='btn' style='padding:10px 20px; background-color:#007bff; color:white; text-decoration:none; border-radius:5px;'>Setup Database Now</a></p>";
+?>

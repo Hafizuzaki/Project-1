@@ -1,0 +1,26 @@
+Options -Indexes
+Options -ExecCGI
+
+# Hide sensitive files
+<FilesMatch "\.(sql|log|env|md|git|gitignore|htpasswd)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Security headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options SAMEORIGIN
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy strict-origin-when-cross-origin
+</IfModule>
+
+# PHP settings
+<IfModule mod_php.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 12M
+    php_value max_execution_time 60
+    php_flag display_errors On
+    php_flag log_errors On
+    php_value error_log C:/Windows/Temp/php_errors.log
+</IfModule>
